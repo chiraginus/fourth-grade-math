@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <title>Math Practice — 4th Grade</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <div id="app">
+    <!-- Home screen -->
+    <section id="screen-home" class="screen active">
+      <header class="hero">
+        <h1>Math Practice</h1>
+        <p class="subtitle">4th Grade</p>
+      </header>
+
+      <div class="stats-bar" id="home-stats">
+        <div class="stat">
+          <span class="stat-value" id="total-stars">0</span>
+          <span class="stat-label">Stars</span>
+        </div>
+        <div class="stat">
+          <span class="stat-value" id="best-streak">0</span>
+          <span class="stat-label">Best Streak</span>
+        </div>
+      </div>
+
+      <h2 class="section-title">Pick a topic</h2>
+      <div class="topic-grid">
+        <button class="topic-btn" data-topic="multiplication">
+          <span class="topic-icon">×</span>
+          <span class="topic-name">Multiplication</span>
+        </button>
+        <button class="topic-btn" data-topic="division">
+          <span class="topic-icon">÷</span>
+          <span class="topic-name">Division</span>
+        </button>
+        <button class="topic-btn" data-topic="addition">
+          <span class="topic-icon">+</span>
+          <span class="topic-name">Addition</span>
+        </button>
+        <button class="topic-btn" data-topic="subtraction">
+          <span class="topic-icon">−</span>
+          <span class="topic-name">Subtraction</span>
+        </button>
+        <button class="topic-btn" data-topic="fractions">
+          <span class="topic-icon">½</span>
+          <span class="topic-name">Fractions</span>
+        </button>
+        <button class="topic-btn" data-topic="mixed">
+          <span class="topic-icon">★</span>
+          <span class="topic-name">Mixed Review</span>
+        </button>
+      </div>
+
+      <button class="progress-link" id="btn-progress">📊 Parent Progress</button>
+    </section>
+
+    <!-- Quiz screen -->
+    <section id="screen-quiz" class="screen">
+      <header class="quiz-header">
+        <button class="back-btn" id="btn-back" aria-label="Back">←</button>
+        <div class="quiz-info">
+          <span id="quiz-topic-label">Multiplication</span>
+          <span class="quiz-progress" id="quiz-progress">1 / 10</span>
+        </div>
+        <div class="streak-badge" id="streak-badge">🔥 0</div>
+      </header>
+
+      <div class="question-card">
+        <p class="question-text" id="question-text">7 × 8 = ?</p>
+        <p class="question-hint" id="question-hint"></p>
+      </div>
+
+      <div class="answer-area">
+        <input
+          type="text"
+          inputmode="decimal"
+          id="answer-input"
+          class="answer-input"
+          placeholder="Your answer"
+          autocomplete="off"
+          autocapitalize="off"
+        >
+        <button class="submit-btn" id="btn-submit">Check</button>
+      </div>
+
+      <div class="choices-grid hidden" id="choices-grid"></div>
+
+      <div class="feedback hidden" id="feedback">
+        <p class="feedback-text" id="feedback-text"></p>
+        <button class="next-btn" id="btn-next">Next →</button>
+      </div>
+    </section>
+
+    <!-- Progress / parent review screen -->
+    <section id="screen-progress" class="screen">
+      <header class="quiz-header">
+        <button class="back-btn" id="btn-progress-back" aria-label="Back">←</button>
+        <div class="quiz-info">
+          <span id="progress-title">Progress Report</span>
+          <span class="quiz-progress">For parents</span>
+        </div>
+      </header>
+
+      <div class="progress-summary" id="progress-summary"></div>
+
+      <h2 class="section-title">Daily activity</h2>
+      <div class="progress-days" id="progress-days"></div>
+
+      <div class="progress-empty hidden" id="progress-empty">
+        <p>No practice sessions yet.</p>
+        <p class="progress-empty-hint">Complete a round and results will show up here.</p>
+      </div>
+
+      <button class="secondary-btn progress-export" id="btn-export">Export report</button>
+    </section>
+
+    <!-- Results screen -->
+    <section id="screen-results" class="screen">
+      <div class="results-card">
+        <div class="results-emoji" id="results-emoji">🎉</div>
+        <h2 id="results-title">Great job!</h2>
+        <p class="results-score" id="results-score">8 / 10 correct</p>
+        <p class="results-stars" id="results-stars">+3 stars earned!</p>
+        <div class="results-actions">
+          <button class="primary-btn" id="btn-play-again">Play Again</button>
+          <button class="secondary-btn" id="btn-home">Home</button>
+        </div>
+      </div>
+    </section>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>
