@@ -1,4 +1,4 @@
-const QUESTIONS_PER_ROUND = 10;
+const QUESTIONS_PER_ROUND = 20;
 const STORAGE_KEY = 'fourthGradeMathStats';
 const MAX_SESSIONS = 300;
 const RECENT_QUESTIONS_LIMIT = 30;
