@@ -64,13 +64,14 @@
         <button class="back-btn" id="btn-back" aria-label="Back">←</button>
         <div class="quiz-info">
           <span id="quiz-topic-label">Multiplication</span>
-          <span class="quiz-progress" id="quiz-progress">1 / 10</span>
+          <span class="quiz-progress" id="quiz-progress">1 / 30</span>
         </div>
         <div class="streak-badge" id="streak-badge">🔥 0</div>
       </header>
 
       <div class="question-card">
-        <p class="question-text" id="question-text">7 × 8 = ?</p>
+        <div class="question-stack hidden" id="question-stack" aria-hidden="true"></div>
+        <p class="question-text hidden" id="question-text">7 × 8 = ?</p>
         <p class="question-hint" id="question-hint"></p>
       </div>
 
@@ -123,7 +124,7 @@
       <div class="results-card">
         <div class="results-emoji" id="results-emoji">🎉</div>
         <h2 id="results-title">Great job!</h2>
-        <p class="results-score" id="results-score">8 / 10 correct</p>
+        <p class="results-score" id="results-score">24 / 30 correct</p>
         <p class="results-stars" id="results-stars">+3 stars earned!</p>
         <div class="results-actions">
           <button class="primary-btn" id="btn-play-again">Play Again</button>

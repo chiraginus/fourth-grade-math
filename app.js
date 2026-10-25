@@ -1,7 +1,7 @@
-const QUESTIONS_PER_ROUND = 20;
+const QUESTIONS_PER_ROUND = 30;
 const STORAGE_KEY = 'fourthGradeMathStats';
 const MAX_SESSIONS = 300;
-const RECENT_QUESTIONS_LIMIT = 30;
+const RECENT_QUESTIONS_LIMIT = 90;
 
 const TOPIC_LABELS = {
   multiplication: 'Multiplication',
@@ -103,7 +103,41 @@ function saveSession() {
 }
 
 function questionKey(question) {
+  if (question.key) return question.key;
   return question.text.replace(/\s+/g, ' ').trim();
+}
+
+function makeStackedQuestion(operands, answer, hint) {
+  const top = String(operands.top);
+  const bottom = String(operands.bottom);
+  const text = `${top} ${operands.operator} ${bottom} = ?`;
+  return {
+    type: 'input',
+    layout: 'stacked',
+    operands: { top, bottom, operator: operands.operator },
+    answer,
+    hint,
+    text,
+    key: `${top}${operands.operator}${bottom}`,
+  };
+}
+
+function renderStackedQuestion(container, operands) {
+  container.innerHTML = `
+    <div class="stack-row stack-row-top">
+      <span class="stack-spacer"></span>
+      <span class="stack-num">${operands.top}</span>
+    </div>
+    <div class="stack-row stack-row-op">
+      <span class="stack-op">${operands.operator}</span>
+      <span class="stack-num">${operands.bottom}</span>
+    </div>
+    <div class="stack-line"></div>
+    <div class="stack-row stack-row-answer">
+      <span class="stack-spacer"></span>
+      <span class="stack-prompt">?</span>
+    </div>
+  `;
 }
 
 function updateRecentQuestions(session) {
@@ -220,37 +254,65 @@ function fractionToString(num, den) {
   return `${num}/${den}`;
 }
 
+function twoDigit() {
+  return randInt(10, 99);
+}
+
 function generateMultiplication() {
-  const multiDigit = Math.random() < 0.35;
-  if (multiDigit) {
-    const a = randInt(12, 99);
-    const b = randInt(2, 9);
-    return {
-      type: 'input',
-      text: `${a} × ${b} = ?`,
-      answer: a * b,
-      hint: 'Multiply step by step',
-    };
+  const roll = Math.random();
+  if (roll < 0.1) {
+    const a = randInt(2, 12);
+    const b = randInt(2, 12);
+    return makeStackedQuestion({ top: a, bottom: b, operator: '×' }, a * b);
   }
-  const a = randInt(2, 12);
-  const b = randInt(2, 12);
-  return {
-    type: 'input',
-    text: `${a} × ${b} = ?`,
-    answer: a * b,
-  };
+  if (roll < 0.2) {
+    const a = twoDigit();
+    const b = randInt(2, 9);
+    return makeStackedQuestion(
+      { top: a, bottom: b, operator: '×' },
+      a * b,
+      'Multiply step by step'
+    );
+  }
+  const a = twoDigit();
+  const b = twoDigit();
+  return makeStackedQuestion(
+    { top: a, bottom: b, operator: '×' },
+    a * b,
+    'Both numbers are two digits — e.g. 25 × 30'
+  );
 }
 
 function generateDivision() {
-  const b = randInt(2, 12);
-  const quotient = randInt(2, 12);
-  const a = b * quotient;
-  return {
-    type: 'input',
-    text: `${a} ÷ ${b} = ?`,
-    answer: quotient,
-    hint: 'Think: what times the divisor equals the dividend?',
-  };
+  const roll = Math.random();
+  if (roll < 0.15) {
+    const b = randInt(2, 9);
+    const quotient = randInt(2, 12);
+    const a = b * quotient;
+    return makeStackedQuestion(
+      { top: a, bottom: b, operator: '÷' },
+      quotient,
+      'How many times does the bottom number fit?'
+    );
+  }
+  if (roll < 0.35) {
+    const b = randInt(2, 9);
+    const quotient = twoDigit();
+    const a = b * quotient;
+    return makeStackedQuestion(
+      { top: a, bottom: b, operator: '÷' },
+      quotient,
+      'Long division — divide step by step'
+    );
+  }
+  const divisor = twoDigit();
+  const quotient = randInt(2, 99);
+  const dividend = divisor * quotient;
+  return makeStackedQuestion(
+    { top: dividend, bottom: divisor, operator: '÷' },
+    quotient,
+    'Two-digit divisor — no remainder (e.g. 750 ÷ 25 = 30)'
+  );
 }
 
 function generateAddition() {
@@ -258,20 +320,15 @@ function generateAddition() {
   if (multiDigit) {
     const a = randInt(100, 9999);
     const b = randInt(100, 9999);
-    return {
-      type: 'input',
-      text: `${a.toLocaleString()} + ${b.toLocaleString()} = ?`,
-      answer: a + b,
-      hint: 'Line up the place values',
-    };
+    return makeStackedQuestion(
+      { top: a, bottom: b, operator: '+' },
+      a + b,
+      'Line up the place values'
+    );
   }
   const a = randInt(10, 99);
   const b = randInt(10, 99);
-  return {
-    type: 'input',
-    text: `${a} + ${b} = ?`,
-    answer: a + b,
-  };
+  return makeStackedQuestion({ top: a, bottom: b, operator: '+' }, a + b);
 }
 
 function generateSubtraction() {
@@ -279,20 +336,15 @@ function generateSubtraction() {
   if (multiDigit) {
     const b = randInt(100, 4999);
     const a = b + randInt(100, 4999);
-    return {
-      type: 'input',
-      text: `${a.toLocaleString()} − ${b.toLocaleString()} = ?`,
-      answer: a - b,
-      hint: 'You may need to regroup',
-    };
+    return makeStackedQuestion(
+      { top: a, bottom: b, operator: '−' },
+      a - b,
+      'You may need to regroup'
+    );
   }
   const b = randInt(10, 89);
   const a = b + randInt(10, 99);
-  return {
-    type: 'input',
-    text: `${a} − ${b} = ?`,
-    answer: a - b,
-  };
+  return makeStackedQuestion({ top: a, bottom: b, operator: '−' }, a - b);
 }
 
 function generateFractionQuestion() {
@@ -429,7 +481,18 @@ function showQuestion() {
   document.getElementById('quiz-progress').textContent =
     `${state.currentIndex + 1} / ${QUESTIONS_PER_ROUND}`;
   document.getElementById('streak-badge').textContent = `🔥 ${state.streak}`;
-  document.getElementById('question-text').textContent = q.text;
+
+  const questionText = document.getElementById('question-text');
+  const questionStack = document.getElementById('question-stack');
+  if (q.layout === 'stacked') {
+    questionText.classList.add('hidden');
+    questionStack.classList.remove('hidden');
+    renderStackedQuestion(questionStack, q.operands);
+  } else {
+    questionStack.classList.add('hidden');
+    questionText.classList.remove('hidden');
+    questionText.textContent = q.text;
+  }
   document.getElementById('question-hint').textContent = q.hint || '';
 
   const feedback = document.getElementById('feedback');
